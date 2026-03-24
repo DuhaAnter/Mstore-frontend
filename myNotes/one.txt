@@ -10,3 +10,6 @@
 ---> JSX stands for JavaScript XML and allows us to write HTML in React.
 ---> JSX should return ONE ELEMENT thats why we use" <Fragment></Fragment> " imported from React and we write " <> </> " as a short for it.
 note: Fragment element doesn't exist in real DOM (u cann't see it in inspect).
+
+************************
+---> shadcn/ui : a collection of re-usable components that you copy and paste into your project. You own the code; it is not a dependency you install via npm.
