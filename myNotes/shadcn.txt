@@ -1,0 +1,3 @@
+---> shadcn/ui : a collection of re-usable components that you copy and paste into your project. You own the code; it is not a dependency you install via npm.
+
+---> shadcn needs a shortcut (an alias) to find your files without using messy paths like ../../components. (jsconfig.json)

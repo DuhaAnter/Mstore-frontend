@@ -12,4 +12,6 @@
 note: Fragment element doesn't exist in real DOM (u cann't see it in inspect).
 
 ************************
----> shadcn/ui : a collection of re-usable components that you copy and paste into your project. You own the code; it is not a dependency you install via npm.
+
+---> Analogy: npm is buying a tool to keep in your garage; npx is hiring a specialist to show up, do the job, and leave.
+
