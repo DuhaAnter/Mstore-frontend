@@ -1,0 +1,12 @@
+---> index.css contains the global styling of the project.
+---> main.jsx is where the project starts (components u want to display live there) it's called JavaScript entery Point.
+---> index.html this is the single page pointed in "Single Page Application" and called Page Template.
+---> React and Vue use virtual DOM ,Angular don't. it has "detection zone" that handles rerendering only the part that changed.
+---> Next is "React + better SEO for all parts of the projrct".
+
+*************************
+
+---> React use functional components i.e. every component is a Function that must start with a capital letter.
+---> JSX stands for JavaScript XML and allows us to write HTML in React.
+---> JSX should return ONE ELEMENT thats why we use" <Fragment></Fragment> " imported from React and we write " <> </> " as a short for it.
+note: Fragment element doesn't exist in real DOM (u cann't see it in inspect).
