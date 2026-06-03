@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { forget, reset, verify } from "../api/auth";
+import { Link } from "react-router";
 
 export default function Forgetpass() {
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(3);
   // const [loading,setLoading] = useState(false);
   const [uiMessage, setUiMessage] = useState("");
   const [email, setEmail] = useState("");
@@ -89,17 +90,9 @@ export default function Forgetpass() {
                 <div className="flex-1 h-px bg-black"></div>
               </div>
               <div className="flex justify-center pt-2">
-                <button
-                  type="button"
-                  className="
-                flex items-center gap-2
-                
-                text-sm
-                hover:underline
-              "
-                >
-                  Back to Log In
-                </button>
+                <Link to='/login'>
+                    Back to Log in
+                </Link>
               </div>
             </form>
           </div>
@@ -195,17 +188,9 @@ export default function Forgetpass() {
                 <div className="flex-1 h-px bg-black"></div>
               </div>
               <div className="flex justify-center pt-2">
-                <button
-                  type="button"
-                  className="
-                flex items-center gap-2
-                
-                text-sm
-                hover:underline
-              "
-                >
-                  Back to Log In
-                </button>
+                <Link to='/login'>
+                    Back to Log in
+                </Link>
               </div>
             </form>
           </div>

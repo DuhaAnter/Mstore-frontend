@@ -1,6 +1,8 @@
 
 import { useState } from "react";
 import {login} from "../api/auth";
+import { Link } from "react-router";
+import Forgetpass from "./forgetpass";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -52,9 +54,9 @@ export default function Login() {
               required
             />
             <div className="text-right">
-              <a href="#" className="text-sm text-gray-400 hover:text-black">
+              <Link to="/forgetpass" className="text-sm text-gray-400 hover:text-black">
                 Forgot password?
-              </a>
+              </Link>
             </div>
             <button
               disabled={loading}

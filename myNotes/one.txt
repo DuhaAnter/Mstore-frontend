@@ -15,3 +15,5 @@ note: Fragment element doesn't exist in real DOM (u cann't see it in inspect).
 
 ---> Analogy: npm is buying a tool to keep in your garage; npx is hiring a specialist to show up, do the job, and leave.
 
+---> React treats components starting with lowercase letters as HTML elements.
+---> Components must be PascalCase (uppercase first letter) to be recognized as React components.
