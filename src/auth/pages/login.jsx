@@ -2,56 +2,85 @@ import { useState } from "react";
 import { login } from "../api/auth";
 import { Link } from "react-router";
 
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { loginSchema } from "../utils/authValidation";
+
 import AuthLayout from "../components/AuthLayout";
 import OAuthButton from "../components/OAuthButton";
 import Divider from "../components/Divider";
 import AuthErrorMessage from "../components/AuthErrorMessage";
 
 export default function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState(""); // Good to have for handling errors
-  const [loading, setLoading] = useState(false); // Good for disabling buttons during submission
+  const [backendError, setBackendError] = useState("");
 
-  const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevents the browser from reloading the page
-    setError("");
-    setLoading(true);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    resolver: zodResolver(loginSchema),
+  });
+
+  // 2. This function only runs if Zod passes all validation checks
+  const onFormSubmit = async (data) => {
+
+    setBackendError(""); // Clear old errors
+    // 'data' is an object containing { email: "...", password: "..." }
+    console.log("Valid Form Data from zod:", data);
+
     try {
-      const data = await login(email, password);
-      console.log(data);
+      //Axios login API call goes here using data.email and data.password
+      const responseData = await login(data.email, data.password);
+      console.log("Login Success:", responseData);
     } catch (error) {
       console.log(error);
-      setError(error.response?.data?.message || "Login failed. Try again.");
-    } finally {
-      setLoading(false);
+      // Handle backend error states here
+      setBackendError(
+        error.response?.data?.message || "Login failed. Try again.",
+      );
     }
   };
-  const handleOAuth =()=>{
-    console.log("calling google api .....")
+
+  const handleOAuth = () => {
+    console.log("calling google api .....");
   };
 
   return (
     <>
       <AuthLayout>
-       <AuthErrorMessage message={error}/>
-        <form action="" className="space-y-4" onSubmit={handleSubmit}>
-          <input
-            type="email"
-            placeholder="Email Address"
-            class="w-full border border-black-200 rounded-xl py-3 px-4 outline-none focus:border-black  placeholder:text-gra"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            className="w-full border border-black-200 rounded-xl py-3 px-4 outline-none focus:border-black  placeholder:text-gra"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+        <AuthErrorMessage message={backendError} />
+        <form
+          className="space-y-4 w-full"
+          onSubmit={handleSubmit(onFormSubmit)}
+        >
+          <div>
+            <input
+              type="email"
+              {...register("email")} // Registers the input field into RHF
+              placeholder="Email Address"
+              className="w-full border border-black-200 rounded-xl py-3 px-4 outline-none focus:border-black "
+            />
+            {errors.email && (
+              <span className="text-xs text-red-500 px-4">
+                {errors.email.message}
+              </span>
+            )}
+          </div>
+
+          <div>
+            <input
+              type="password"
+              {...register("password")}
+              placeholder="Password"
+              className="w-full border border-black-200 rounded-xl py-3 px-4 outline-none focus:border-black "
+            />
+            {errors.password && (
+              <span className="text-xs text-red-500 px-4">
+                {errors.password.message}
+              </span>
+            )}
+          </div>
           <div className="text-right">
             <Link
               to="/forgetpass"
@@ -61,20 +90,22 @@ export default function Login() {
             </Link>
           </div>
           <button
-            disabled={loading}
+            disabled={isSubmitting}
             type="submit"
-            className="w-full bg-black text-white py-2 rounded-lg cursor-pointer"
+            className="w-full bg-black text-white py-2 rounded-lg cursor-pointer disabled:bg-gray-400 disabled:cursor-not-allowed"
           >
-            {loading ? "Logging in..." : "Login"}
+            {isSubmitting ? "Logging in..." : "Login"}
           </button>
-          <Divider/>
+          <Divider />
           {/* Log in with Google */}
-          <OAuthButton title ="Log in with Google" handleOAuth={handleOAuth}></OAuthButton>
+          <OAuthButton
+            title="Log in with Google"
+            handleOAuth={handleOAuth}
+          ></OAuthButton>
           <Link to="/signup">
             <p className="text-center text-sm text-gray-600">
               New here?
               <span className="pl-1 font-medium text-black hover:underline">
-                {" "}
                 Create Account
               </span>
             </p>

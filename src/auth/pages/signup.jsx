@@ -6,25 +6,31 @@ import OAuthButton from "../components/OAuthButton";
 import Divider from "../components/Divider";
 import AuthErrorMessage from "../components/AuthErrorMessage";
 
-export default function Signup() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState(""); // Good to have for handling errors
-  const [loading, setLoading] = useState(false); // Good for disabling buttons during submission
 
-  const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevents the browser from reloading the page
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { signupSchema } from "../utils/authValidation"; 
+
+export default function Signup() {
+  const [error, setError] = useState(""); // Kept for backend API errors
+
+  const {
+    register,
+    handleSubmit: handleRHFSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    resolver: zodResolver(signupSchema),
+  });
+
+  const onFormSubmit = async (data) => {
     setError("");
-    setLoading(true);
+    // data contains: { name, email, password, confirmPassword }
     try {
-      const data = await signup(name, email, password);
-      console.log(data);
+      const responseData = await signup(data.name, data.email, data.password);
+      console.log(responseData);
     } catch (error) {
       console.log(error.response);
       setError(error.response?.data?.message || "sign up failed. Try again.");
-    } finally {
-      setLoading(false);
     }
   };
   const handleOAuth = () => {
@@ -39,47 +45,59 @@ export default function Signup() {
           <h2 className="text-3xl font-bold">Welcome</h2>
           <p className="mt-2 text-gray-600">Create your account</p>
         </div>
-        <form action="" className="space-y-4" onSubmit={handleSubmit}>
-          <input
-            type="text"
-            placeholder="Full Name"
-            className="w-full border border-gray-200 rounded-xl py-3 px-4 outline-none focus:border-black placeholder:text-gray-400"
-            value={name}
-            required
-            onChange={(e) => {
-              setName(e.target.value);
-            }}
-          />
-          <input
-            type="email"
-            placeholder="Email Address"
-            className="w-full border border-gray-200 rounded-xl py-3 px-4 outline-none focus:border-black placeholder:text-gray-400"
-            value={email}
-            required
-            onChange={(e) => {
-              setEmail(e.target.value);
-            }}
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            className="w-full border border-gray-200 rounded-xl py-3 px-4 outline-none focus:border-black placeholder:text-gray-400"
-            value={password}
-            required
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <input
-            type="password"
-            placeholder="Confirm Password"
-            className="w-full border border-gray-200 rounded-xl py-3 px-4 outline-none focus:border-black placeholder:text-gray-400"
-          />
+        <form className="space-y-4 w-full" onSubmit={handleRHFSubmit(onFormSubmit)}>
+          <div>
+            <input
+              type="text"
+              placeholder="Full Name"
+              className="w-full border border-gray-200 rounded-xl py-3 px-4 outline-none focus:border-black placeholder:text-gray-400"
+              {...register("name")} // RHF Register
+            />
+            {errors.name && (
+              <span className="text-xs text-red-500 px-4 mt-1 block">{errors.name.message}</span>
+            )}
+          </div>
+          <div>
+            <input
+              type="email"
+              placeholder="Email Address"
+              className="w-full border border-gray-200 rounded-xl py-3 px-4 outline-none focus:border-black placeholder:text-gray-400"
+              {...register("email")} // RHF Register
+            />
+            {errors.email && (
+              <span className="text-xs text-red-500 px-4 mt-1 block">{errors.email.message}</span>
+            )}
+          </div>
+          <div>
+            <input
+              type="password"
+              placeholder="Password"
+              className="w-full border border-gray-200 rounded-xl py-3 px-4 outline-none focus:border-black placeholder:text-gray-400"
+              {...register("password")} // RHF Register
+            />
+            {errors.password && (
+              <span className="text-xs text-red-500 px-4 mt-1 block">{errors.password.message}</span>
+            )}
+          </div>
+          <div>
+            <input
+              type="password"
+              placeholder="Confirm Password"
+              className="w-full border border-gray-200 rounded-xl py-3 px-4 outline-none focus:border-black placeholder:text-gray-400"
+              {...register("confirmPassword")} // RHF Register
+            />
+            {errors.confirmPassword && (
+              <span className="text-xs text-red-500 px-4 mt-1 block">{errors.confirmPassword.message}</span>
+            )}
+          </div>
           <button
-            disabled={loading}
+            disabled={isSubmitting}
             type="submit"
-            className="w-full bg-black text-white py-3 rounded-xl font-medium cursor-pointer hover:bg-gray-900 transition-colors"
+            className="w-full bg-black text-white py-3 rounded-xl font-medium cursor-pointer hover:bg-gray-900 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
           >
-            {loading ? "Signing up..." : "Sign up"}
+            {isSubmitting ? "Signing up..." : "Sign up"}
           </button>
+          
           <Divider />
           <OAuthButton
             title="Sign up with Google"
