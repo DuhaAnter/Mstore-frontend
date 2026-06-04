@@ -1,17 +1,22 @@
 import { useState } from "react";
 import { forget, reset, verify } from "../api/auth";
 import { Link } from "react-router";
+import AuthLayout from "../components/AuthLayout";
+import Divider from "../components/Divider";
+import AuthErrorMessage from "../components/AuthErrorMessage";
 
 export default function Forgetpass() {
-  const [step, setStep] = useState(3);
+  const [step, setStep] = useState(1);
   // const [loading,setLoading] = useState(false);
   const [uiMessage, setUiMessage] = useState("");
+  const [error, setError] = useState("");
   const [email, setEmail] = useState("");
   const [otpCode, setOtpCode] = useState("");
   const [newPassword, setNewPassword] = useState("");
 
   const handleSubmitEmail = async (e) => {
     e.preventDefault();
+    setError("");
     // setLoading(true);
     try {
       const data = await forget(email);
@@ -20,40 +25,47 @@ export default function Forgetpass() {
       setStep(2);
     } catch (error) {
       console.log(error);
+      setError(
+        error.response?.data?.message || "something went wrong. Try again.",
+      );
     }
   };
   const handleSubmitOtp = async (e) => {
     e.preventDefault();
+     setError("");
     // setLoading(true);
     try {
-       const data = await verify(email,otpCode);
+      const data = await verify(email, otpCode);
       console.log(email);
       console.log(data);
       setStep(3);
     } catch (error) {
       console.log(error);
+      setError(
+        error.response?.data?.message || "something went wrong. Try again.",
+      );
     }
   };
-  const handleResetPassword = async (e) =>{
+  const handleResetPassword = async (e) => {
     e.preventDefault();
+     setError("");
     try {
-      const data = await reset(email,otpCode,newPassword);
-      console.log(data)
-      console.log("doneeeeeeeeeeee")
-
+      const data = await reset(email, otpCode, newPassword);
+      console.log(data);
+      console.log("doneeeeeeeeeeee");
     } catch (error) {
-       console.log(error);
+      console.log(error);
+      setError(
+        error.response?.data?.message || "something went wrong. Try again.",
+      );
     }
-
   };
   const renderStepLayout = () => {
     switch (step) {
       case 1:
         return (
-          <div className="max-w-md shadow-2xl rounded-3xl p-5 sm:p-8 flex flex-col items-center justify-center">
-            <p className="font-semibold text-6xl mb-5 font-['Pinyon_Script']">
-              Fashions
-            </p>
+          <>
+            <AuthErrorMessage message={error} />
             <div className="text-center mb-5">
               <h1 className="text-3xl font-bold">Forgot your password?</h1>
 
@@ -61,9 +73,6 @@ export default function Forgetpass() {
                 Enter your email address and we&apos;ll
                 <br />
                 send you an OTP to reset your password.
-              </p>
-              <p className="text-sm mt-2 leading-6 text-green-600">
-                {uiMessage}
               </p>
             </div>
             <form action="" className="space-y-4" onSubmit={handleSubmitEmail}>
@@ -77,35 +86,26 @@ export default function Forgetpass() {
                   setEmail(e.target.value);
                 }}
               />
-
               <button
                 type="submit"
                 className="w-full bg-black text-white py-2 rounded-lg cursor-pointer"
               >
                 Send
               </button>
-              <div className="flex items-center gap-4 px-8">
-                <div className="flex-1 h-px bg-black"></div>
-                <span className=" text-sm">or</span>
-                <div className="flex-1 h-px bg-black"></div>
-              </div>
-              <div className="flex justify-center pt-2">
-                <Link to='/login'>
-                    Back to Log in
-                </Link>
+              <Divider />
+              <div className="flex justify-center pt-2 hover:underline">
+                <Link to="/login">Back to Log in</Link>
               </div>
             </form>
-          </div>
+          </>
         );
       case 2:
         return (
-          <div className="max-w-md shadow-2xl rounded-3xl p-5 sm:p-8 flex flex-col items-center justify-center">
-            <p className="font-semibold text-6xl mb-5 font-['Pinyon_Script']">
-              Fashions
-            </p>
+          <>
+            <AuthErrorMessage message={error} />
+            <p className="text-sm mb-2 leading-6 text-green-600">{uiMessage}</p>
             <div className="text-center mb-8">
               <h1 className="text-3xl font-bold">Enter OTP </h1>
-
               <p className="text-sm mt-3 leading-6">
                 Check your email we have
                 <br />
@@ -122,45 +122,42 @@ export default function Forgetpass() {
                   setOtpCode(e.target.value);
                 }}
               />
-
               <button
                 type="submit"
                 className="w-full bg-black text-white py-2 rounded-lg cursor-pointer"
               >
                 Verify
               </button>
-              <div className="flex items-center gap-4 px-8">
-                <div className="flex-1 h-px bg-black"></div>
-                <span className=" text-sm">or</span>
-                <div className="flex-1 h-px bg-black"></div>
-              </div>
+              <Divider />
             </form>
-
             <button
-               onClick={()=>{setStep(1)}}
+              onClick={() => {
+                setStep(1);
+              }}
               className="
                 cursor-pointer
                 text-sm
                 hover:underline
-                mt-2
-              "
+                mt-2"
             >
               Back to Email
             </button>
-          </div>
+          </>
         );
       case 3:
         return (
-          <div className="max-w-md shadow-2xl rounded-3xl p-5 sm:p-8 flex flex-col items-center justify-center">
-            <p className="font-semibold text-6xl mb-5 font-['Pinyon_Script']">
-              Fashions
-            </p>
+          <>
+            <AuthErrorMessage message={error} />
             <div className="text-center mb-8">
               <h1 className="text-3xl font-bold">Reset your Password </h1>
 
               <p className="text-sm mt-3 leading-6">Enter your new password</p>
             </div>
-            <form action="" className="space-y-4" onSubmit={handleResetPassword}>
+            <form
+              action=""
+              className="space-y-4"
+              onSubmit={handleResetPassword}
+            >
               <input
                 type="password"
                 placeholder="New Password"
@@ -182,18 +179,12 @@ export default function Forgetpass() {
               >
                 Reset
               </button>
-              <div className="flex items-center gap-4 px-8">
-                <div className="flex-1 h-px bg-black"></div>
-                <span className=" text-sm">or</span>
-                <div className="flex-1 h-px bg-black"></div>
-              </div>
-              <div className="flex justify-center pt-2">
-                <Link to='/login'>
-                    Back to Log in
-                </Link>
+              <Divider />
+              <div className="flex justify-center pt-2 hover:underline">
+                <Link to="/login">Log in</Link>
               </div>
             </form>
-          </div>
+          </>
         );
       default:
         return null;
@@ -202,9 +193,7 @@ export default function Forgetpass() {
 
   return (
     <>
-      <div className="flex items-center justify-center min-h-screen bg-gray-50">
-        {renderStepLayout()}
-      </div>
+      <AuthLayout>{renderStepLayout()}</AuthLayout>
     </>
   );
 }

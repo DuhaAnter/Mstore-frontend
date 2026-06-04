@@ -14,16 +14,18 @@ import NotFound from "./pages/NotFound";
 import Header from "./Components/Header";
 import Login from "./auth/pages/login";
 import Forgetpass from "./auth/pages/forgetpass";
+import Signup from "./auth/pages/signup";
 
 
 function App() {
   return (
     <>
       <BrowserRouter>
-        <Header />
+        {/* <Header /> */}
         <Routes>
           <Route path="/" element={<Home></Home>} />
           <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
           <Route path="/forgetpass" element={<Forgetpass />} />
 
           <Route path="*" element={<NotFound />} />

@@ -2,3 +2,6 @@
 -- The error is happening because you are using CommonJS syntax (module.exports = ...) in your API file, but your React frontend (running on Vite at port 5173) expects modern ES Module syntax (export const ... or export default ...).
 -- Vite doesn't know how to read module.exports out of the box for your source files, so it thinks the file is completely empty of exports.
 
+-- By default, any standard <button> placed inside an HTML <form> acts as a type="submit" button.
+-- Setting the type to "button" tells the browser: "Hey, this is just a regular button. When clicked, only run the Google API function, and completely ignore the form submission."
+## <button type="button" onClick={handleGoogleLogin}>Sign In with Google</button>
