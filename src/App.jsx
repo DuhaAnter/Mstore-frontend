@@ -8,6 +8,7 @@
 //import ForgetPassword from "./pages/forgetPassword";
 
 import { BrowserRouter, Route, Routes } from "react-router";
+
 import Home from "./pages/Home";
 import NotFound from "./pages/NotFound";
 
@@ -15,6 +16,8 @@ import Header from "./Components/Header";
 import Login from "./auth/pages/login";
 import Forgetpass from "./auth/pages/forgetpass";
 import Signup from "./auth/pages/signup";
+import ProtectedRoutes from "./utils/ProtectedRoutes";
+import Profile from "./pages/Profile";
 
 
 function App() {
@@ -27,7 +30,9 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/forgetpass" element={<Forgetpass />} />
-
+          <Route element={<ProtectedRoutes/>}>
+              <Route path='/profile' element={<Profile/>}/>
+          </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
