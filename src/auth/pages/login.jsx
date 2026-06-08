@@ -11,8 +11,19 @@ import OAuthButton from "../components/OAuthButton";
 import Divider from "../components/Divider";
 import AuthErrorMessage from "../components/AuthErrorMessage";
 
+
+import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from "react-redux";
+import { setUserInfo } from "@/store/sliceses/userSlice";
+
+
 export default function Login() {
   const [backendError, setBackendError] = useState("");
+  const navigate = useNavigate();          
+  //redux
+  const user = useSelector(state=>state.user);
+  console.log('user data from redux store',user);
+  const dispatch = useDispatch();
 
   const {
     register,
@@ -33,6 +44,17 @@ export default function Login() {
       //Axios login API call goes here using data.email and data.password
       const responseData = await login(data.email, data.password);
       console.log("Login Success:", responseData);
+      if (responseData.message === "success u r logged in") {
+        // store the user date in redux
+        const logged = true;
+        const userObj = {logged,...responseData.data}
+        dispatch(setUserInfo(userObj))
+
+
+
+        navigate('/profile');
+       
+      }
     } catch (error) {
       console.log(error);
       // Handle backend error states here
