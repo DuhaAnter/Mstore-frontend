@@ -18,18 +18,20 @@ import Forgetpass from "./auth/pages/forgetpass";
 import Signup from "./auth/pages/signup";
 import ProtectedRoutes from "./utils/ProtectedRoutes";
 import Profile from "./pages/Profile";
+import Products from "./products/pages/Products";
 
 
 function App() {
   return (
     <>
       <BrowserRouter>
-        {/* <Header /> */}
+        <Header />
         <Routes>
           <Route path="/" element={<Home></Home>} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/forgetpass" element={<Forgetpass />} />
+          <Route path="/products" element={<Products/>}/>
           <Route element={<ProtectedRoutes/>}>
               <Route path='/profile' element={<Profile/>}/>
           </Route>

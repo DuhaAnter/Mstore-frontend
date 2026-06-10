@@ -28,7 +28,7 @@ export default function Header() {
         <div className="menu flex justify-between w-1/2 text-[#c3c3c3] font-['Montserrat']">
           <ActiveLink to="/">Home</ActiveLink>
           <ActiveLink to="/p2">Men</ActiveLink>
-          <ActiveLink to="/p3">Women</ActiveLink>
+          <ActiveLink to="/products">Women</ActiveLink>
           <ActiveLink to="/p4">Kids</ActiveLink>
           <ActiveLink to="/p5">Sale</ActiveLink>
           <ActiveLink to="/p6">Categoreis</ActiveLink>
