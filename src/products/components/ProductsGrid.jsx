@@ -1,51 +1,21 @@
-export default function ProductsGrid() {
+import ProductImage from "./ProductImage";
+
+export default function ProductsGrid({ products }) {
+  console.log(products);
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2">
-      <div className="card h-96 flex flex-col items-center rounded-lg shadow-md transition-all duration-300 hover:shadow-xl hover:-translate-y-1 ">
-        <div className="w-full  overflow-hidden rounded-t-lg">
-          <img
-            src="../../../public/imgs/product.jpg"
-            alt="pink dress"
-            className="w-full h-full object-center"
-          />
+    <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5">
+      {products.map((product) => (
+        <div className="card flex flex-col items-center rounded-lg shadow-md transition-all duration-300 hover:shadow-xl hover:-translate-y-1 ">
+          <ProductImage src={product.imageURL} />
+          <div className="p-3 text-center">
+            <p className="font-semibold">{product.title}</p>
+            <p className=" text-gray-500 text-center">
+              {product.description.split(" ").slice(0, 4).join(" ") + "..."}
+            </p>
+            <span className="font-semibold py-3">${product.minPrice}</span>
+          </div>
         </div>
-
-        <p className="font-semibold">Pink Dress</p>
-        <p className="text-center text-gray-500">
-          Lorem ipsum dolor sit amet consectetur.
-        </p>
-        <span className="font-semibold">$100</span>
-      </div>
-      <div className="card h-96 flex flex-col items-center rounded-lg shadow-md transition-all duration-300 hover:shadow-xl hover:-translate-y-1 ">
-        <div className="w-full  overflow-hidden rounded-t-lg">
-          <img
-            src="../../../public/imgs/product.jpg"
-            alt="pink dress"
-            className="w-full h-full object-center"
-          />
-        </div>
-
-        <p className="font-semibold">Pink Dress</p>
-        <p className="text-center text-gray-500">
-          Lorem ipsum dolor sit amet consectetur.
-        </p>
-        <span className="font-semibold">$100</span>
-      </div>
-      <div className="card h-96 flex flex-col items-center rounded-lg shadow-md transition-all duration-300 hover:shadow-xl hover:-translate-y-1 ">
-        <div className="w-full  overflow-hidden rounded-t-lg">
-          <img
-            src="../../../public/imgs/product.jpg"
-            alt="pink dress"
-            className="w-full h-full object-center"
-          />
-        </div>
-
-        <p className="font-semibold">Pink Dress</p>
-        <p className="text-center text-gray-500">
-          Lorem ipsum dolor sit amet consectetur.
-        </p>
-        <span className="font-semibold">$100</span>
-      </div>
+      ))}
     </div>
   );
 }
