@@ -6,7 +6,7 @@ import { FaChevronDown } from "react-icons/fa6";
 export default function Products() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  //const [error, setError] = useState("");
   useEffect(() => {
     const fetchAllProducts = async () => {
       try {
@@ -14,7 +14,7 @@ export default function Products() {
         setProducts(data);
       } catch (error) {
         console.log(error);
-        setError(error);
+        //setError(error);
       } finally {
         setLoading(false);
       }
@@ -25,7 +25,7 @@ export default function Products() {
   }, []);
   console.log(products)
   if (loading) return <div>Loading products...</div>;
-  if (error) return <div>{error}</div>;
+  //if (error) return <div>{error}</div>;
 
   return (
     <div className=" md:grid grid-cols-4 p-5">
