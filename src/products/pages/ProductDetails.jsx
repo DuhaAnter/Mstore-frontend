@@ -1,53 +1,136 @@
-import React from "react";
+import { useState } from "react";
 
 export default function ProductDetails() {
+  const [selectedColor, setSelectedColor] = useState("black");
+
+  const colors = [
+    { id: "orange", color: "bg-orange-500" },
+    { id: "green", color: "bg-green-400" },
+    { id: "black", color: "bg-black" },
+    { id: "white", color: "bg-white border border-gray-300" },
+  ];
+
+  const [selectedSize, setSelectedSize] = useState("L");
+
+  const sizes = ["S", "M", "L", "XL", "XXL"];
+
+  const [count, setCount] = useState(1);
+
   return (
-    <div className="p-10">
-      <div className="prd sm:flex gap-3">
-        <div className="w-1/2">
-          <img src="../../../public/imgs/product.jpg" className="h-96 w-full rounded-3xl" />
+    <div className="p-4 md:p-10 max-w-7xl mx-auto">
+      <div className="prd flex flex-col lg:flex-row gap-6 ">
+        <div className="lg:w-1/2 aspect-square overflow-hidden rounded-3xl">
+          <img
+            src="/imgs/product.jpg"
+            alt="Pink Dress"
+            className="w-full h-full object-cover"
+          />
         </div>
-        <div>
-          <h1 className="font-bold text-2xl" style={{ marginTop: "-15px" }}>
-            Pink Dress
-          </h1>
-          <div className="rating">
-            <span className="text-2xl text-[#ffc107] mr-2">
-              ★★★★★
-            </span>
-            <span className="text-[12px]">(320 Review)</span>
+
+        <div className="lg:w-1/2 flex flex-col">
+          <h1 className="font-bold text-3xl md:text-4xl">Pink Dress</h1>
+
+          <div className="flex items-center gap-3 mt-2">
+            <span className="text-3xl text-[#ffc107]">★★★★★</span>
+            <span className="text-sm text-gray-500">(320 Reviews)</span>
           </div>
-          <p className="text-xl font-semibold my-4">$1800</p>
-          <h2 className="text-xl font-medium">Description</h2>
-          <p className="text-gray-500 mb-3">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quam ipsam
-            odio alias dicta enim perferendis perspiciatis harum sed dolorem
-            consequuntur.
-          </p>
-          <div className="variations flex">
+
+          <p className="text-3xl font-semibold mt-4">$1800</p>
+
+          <div className="mt-6">
+            <h2 className="text-xl font-semibold mb-2">Description</h2>
+            <p className="text-gray-600 leading-relaxed">
+              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quam
+              ipsam odio alias dicta enim perferendis perspiciatis harum sed
+              dolorem consequuntur.
+            </p>
+          </div>
+
+          {/* Variations */}
+          <div className="mt-8 space-y-6">
+            {/* Color */}
             <div>
-              <p>Colors</p>
-              <div>
-                <span>red</span>
-                <span>blue</span>
-                <span>green</span>
+              <p className="font-medium mb-2">Color</p>
+              <div className="flex gap-3">
+                {colors.map(({ id, color }) => (
+                  <button
+                    key={id}
+                    onClick={() => setSelectedColor(id)}
+                    className={`
+                  w-9 h-9 rounded-full p-1 transition-all duration-200
+                  ${
+                    selectedColor === id
+                      ? "ring-1 ring-black ring-offset-1 scale-110"
+                      : "hover:scale-105"
+                  }
+                `}
+                  >
+                    <div
+                      className={`${color} w-full h-full rounded-full shadow-sm`}
+                    />
+                  </button>
+                ))}
               </div>
             </div>
+
+            {/* Size */}
             <div>
-              <p>Size</p>
-              <div>
-                <span>X</span>
-                <span>XXL</span>
-                <span>XXXL</span>
+              <p className="font-medium mb-2">Size</p>
+              <div className="flex gap-3 flex-wrap">
+                {sizes.map((size) => (
+                  <button
+                    key={size}
+                    onClick={() => setSelectedSize(size)}
+                    className={`
+                  w-12 h-12 rounded-2xl border-2 transition-all duration-200 text-sm font-medium
+                  ${
+                    selectedSize === size
+                      ? "bg-black text-white border-black"
+                      : "border-gray-300 hover:border-gray-400"
+                  }
+                `}
+                  >
+                    {size}
+                  </button>
+                ))}
               </div>
             </div>
           </div>
-          <span>+1-</span>
-          <button>Add to cart</button>
+
+          {/* Quantity & Add to Cart */}
+          <div className="mt-auto pt-8 flex flex-col sm:flex-row gap-4">
+            <div className="flex items-center bg-gray-100 rounded-2xl px-6 py-4">
+              <button
+                onClick={() => setCount(Math.max(1, count - 1))}
+                className="cursor-pointer text-3xl text-gray-500 hover:text-gray-700 w-8 h-8 flex items-center justify-center transition"
+              >
+                −
+              </button>
+              <span className="mx-6 text-2xl font-medium w-8 text-center">
+                {count}
+              </span>
+              <button
+                onClick={() => setCount(count + 1)}
+                className="cursor-pointer text-3xl text-gray-500 hover:text-gray-700 w-8 h-8 flex items-center justify-center transition"
+              >
+                +
+              </button>
+            </div>
+
+            <button className="cursor-pointer flex-1 bg-black text-white rounded-2xl py-4 text-lg font-medium hover:bg-gray-900 transition">
+              Add to Cart
+            </button>
+          </div>
         </div>
       </div>
-      <div className="related p-5 hidden sm:block">
-        <h1>related items</h1>
+
+      {/* Related Items */}
+      <div className="related mt-16">
+        <h2 className="text-2xl font-semibold mb-6">Related Items</h2>
+        {/* related products grid */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {/* Related product cards */}
+        </div>
       </div>
     </div>
   );
