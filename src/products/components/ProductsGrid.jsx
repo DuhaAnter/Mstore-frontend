@@ -1,11 +1,18 @@
 import ProductImage from "./ProductImage";
+import { useNavigate } from "react-router";
 
 export default function ProductsGrid({ products }) {
-  console.log(products);
+  //console.log(products);
+  const navigate = useNavigate();
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5">
+    <>
       {products.map((product) => (
-        <div className="card flex flex-col items-center rounded-lg shadow-md transition-all duration-300 hover:shadow-xl hover:-translate-y-1 ">
+        <div
+          className="card flex flex-col items-center rounded-lg shadow-md transition-all duration-300 hover:shadow-xl hover:-translate-y-1 "
+          onClick={() => {
+            navigate(`/product-details/${product.id}`);
+          }}
+        >
           <ProductImage src={product.images[0]} />
           <div className="p-3 text-center">
             <p className="font-semibold">{product.title}</p>
@@ -16,6 +23,6 @@ export default function ProductsGrid({ products }) {
           </div>
         </div>
       ))}
-    </div>
+    </>
   );
 }

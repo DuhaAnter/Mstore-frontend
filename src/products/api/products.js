@@ -1,9 +1,20 @@
-const API_URL = "http://localhost:5000/products/";
+// const API_URL = "http://localhost:5000/products/";
+const API_URL = "https://dummyjson.com/products";
+
 
 import axios from "axios";
 
 export const allproducts = async () => {
-    const response = await axios.get('https://dummyjson.com/products');
+    const response = await axios.get(API_URL);
     //console.log(response.data);
     return response.data.products;
+}
+
+export const productById = async (id) => {
+    const response = await axios.get(`${API_URL}/${id}`);
+    return response.data;
+}
+export const relatedProducts = async (category) => {
+    const response = await axios.get(`${API_URL}/category/${category}`);
+    return response.data;
 }

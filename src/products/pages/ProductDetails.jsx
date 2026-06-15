@@ -1,4 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { productById, relatedProducts } from "../api/products";
+import ProductsGrid from "../components/ProductsGrid";
 
 export default function ProductDetails() {
   const [selectedColor, setSelectedColor] = useState("black");
@@ -16,33 +19,76 @@ export default function ProductDetails() {
 
   const [count, setCount] = useState(1);
 
+  const { id } = useParams();
+  const [product, setProduct] = useState(null);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (id) {
+      const fetchProductById = async () => {
+        try {
+          const data = await productById(id);
+
+          setProduct(data);
+        } catch (error) {
+          console.log(error);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      fetchProductById();
+    }
+  }, [id]);
+  useEffect(() => {
+    //safe guard --> Don't fetch related products if category doesn't exist yet
+    if (!product || !product.category) return;
+
+    const fetchRelatedProducts = async () => {
+      try {
+        const data = await relatedProducts(product.category);
+        setProducts(data.products);
+        console.log(data.products);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchRelatedProducts();
+  }, [product?.category]);
+
+  if (loading) {
+    return <div>waiiiiiiiiiiiiiiiiiiiiiiiiit</div>;
+  }
+
   return (
     <div className="p-4 md:p-10 max-w-7xl mx-auto">
       <div className="prd flex flex-col lg:flex-row gap-6 ">
         <div className="lg:w-1/2 aspect-square overflow-hidden rounded-3xl">
           <img
-            src="/imgs/product.jpg"
+            src={product.images?.[0]}
             alt="Pink Dress"
             className="w-full h-full object-cover"
           />
         </div>
 
         <div className="lg:w-1/2 flex flex-col">
-          <h1 className="font-bold text-3xl md:text-4xl">Pink Dress</h1>
+          <h1 className="font-bold text-3xl md:text-4xl">{product.title}</h1>
 
           <div className="flex items-center gap-3 mt-2">
             <span className="text-3xl text-[#ffc107]">★★★★★</span>
-            <span className="text-sm text-gray-500">(320 Reviews)</span>
+            <span className="text-sm text-gray-500">
+              ({product.reviews.length} Reviews)
+            </span>
           </div>
 
-          <p className="text-3xl font-semibold mt-4">$1800</p>
+          <p className="text-3xl font-semibold mt-4">${product.price}</p>
 
           <div className="mt-6">
             <h2 className="text-xl font-semibold mb-2">Description</h2>
             <p className="text-gray-600 leading-relaxed">
-              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quam
-              ipsam odio alias dicta enim perferendis perspiciatis harum sed
-              dolorem consequuntur.
+              {product.description}
             </p>
           </div>
 
@@ -129,7 +175,7 @@ export default function ProductDetails() {
         <h2 className="text-2xl font-semibold mb-6">Related Items</h2>
         {/* related products grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {/* Related product cards */}
+          <ProductsGrid products={products}></ProductsGrid>
         </div>
       </div>
     </div>

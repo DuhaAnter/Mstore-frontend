@@ -1,6 +1,6 @@
 export default function ProductImage({ src, alt ="Product Image" }) {
   return (
-    <div className="w-full h-80 overflow-hidden rounded-t-lg">
+    <div className="w-full  overflow-hidden rounded-t-lg">
       {src ? (
         <img src={src} alt={alt} className="w-full h-full object-center" />
       ) : (
