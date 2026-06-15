@@ -20,6 +20,7 @@ import ProtectedRoutes from "./utils/ProtectedRoutes";
 import Profile from "./pages/Profile";
 import Products from "./products/pages/Products";
 import ProductDetails from "./products/pages/ProductDetails";
+import Cart from "./user/pages/Cart";
 
 
 function App() {
@@ -34,6 +35,7 @@ function App() {
           <Route path="/forgetpass" element={<Forgetpass />} />
           <Route path="/products" element={<Products/>}/>
           <Route path="/product-details/:id" element={<ProductDetails/>}/>
+          <Route path="/cart" element={<Cart/>}/>
 
           <Route element={<ProtectedRoutes/>}>
               <Route path='/profile' element={<Profile/>}/>

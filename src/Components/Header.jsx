@@ -36,7 +36,7 @@ export default function Header() {
             <Link to="/p7">
               <TfiSearch />
             </Link>
-            <Link to="/p8">
+            <Link to="/cart">
               <FaShoppingCart />
             </Link>
             <Link to="/profile">
