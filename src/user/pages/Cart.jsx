@@ -15,7 +15,7 @@ export default function Cart() {
         <div className="prd flex gap-2 md:gap-4 mt-5 border-b pb-4">
           <div className="flex justify-center items-center">
             <img
-              src="/public/imgs/photo_٢٠٢٦-٠٥-٠٧_٠٠-٥٨-٠٩.jpg"
+              src="/imgs/photo_٢٠٢٦-٠٥-٠٧_٠٠-٥٨-٠٩.jpg"
               className="rounded-2xl w-50 h-50"
             />
           </div>
