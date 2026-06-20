@@ -21,6 +21,7 @@ import Profile from "./pages/Profile";
 import Products from "./products/pages/Products";
 import ProductDetails from "./products/pages/ProductDetails";
 import Cart from "./user/pages/Cart";
+import Orders from "./user/pages/Orders";
 
 
 function App() {
@@ -39,6 +40,8 @@ function App() {
 
           <Route element={<ProtectedRoutes/>}>
               <Route path='/profile' element={<Profile/>}/>
+              <Route path='/profile/orders' element={<Orders/>}/>
+
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>

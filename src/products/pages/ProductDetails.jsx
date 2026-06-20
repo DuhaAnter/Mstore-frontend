@@ -30,7 +30,8 @@ export default function ProductDetails() {
         try {
           const data = await productById(id);
 
-          setProduct(data);
+          setProduct(data.product);
+          //console.log(data.product);
         } catch (error) {
           console.log(error);
         } finally {
@@ -43,20 +44,20 @@ export default function ProductDetails() {
   }, [id]);
   useEffect(() => {
     //safe guard --> Don't fetch related products if category doesn't exist yet
-    if (!product || !product.category) return;
+    if (!product || !product.categoryId) return;
 
     const fetchRelatedProducts = async () => {
       try {
-        const data = await relatedProducts(product.category);
+        const data = await relatedProducts(product.categoryId);
         setProducts(data.products);
-        console.log(data.products);
+       console.log(data.products);
       } catch (error) {
         console.log(error);
       }
     };
 
     fetchRelatedProducts();
-  }, [product?.category]);
+  }, [product?.categoryId]);
 
   if (loading) {
     return <div>waiiiiiiiiiiiiiiiiiiiiiiiiit</div>;
@@ -67,7 +68,9 @@ export default function ProductDetails() {
       <div className="prd flex flex-col lg:flex-row gap-6 ">
         <div className="lg:w-1/2 aspect-square overflow-hidden rounded-3xl">
           <img
-            src={product.images?.[0]}
+            // src={product.images?.[0]}
+            src={product.imageURL}
+
             alt="Pink Dress"
             className="w-full h-full object-cover"
           />
@@ -79,11 +82,15 @@ export default function ProductDetails() {
           <div className="flex items-center gap-3 mt-2">
             <span className="text-3xl text-[#ffc107]">★★★★★</span>
             <span className="text-sm text-gray-500">
-              ({product.reviews.length} Reviews)
+              {/* ({product.reviews.length} Reviews) */}
+              (0 Reviews)
+
             </span>
           </div>
 
-          <p className="text-3xl font-semibold mt-4">${product.price}</p>
+          {/* <p className="text-3xl font-semibold mt-4">${product.price}</p> */}
+          <p className="text-3xl font-semibold mt-4">$10</p>
+
 
           <div className="mt-6">
             <h2 className="text-xl font-semibold mb-2">Description</h2>
@@ -178,6 +185,9 @@ export default function ProductDetails() {
           <ProductsGrid products={products}></ProductsGrid>
         </div>
       </div>
+
+
     </div>
+    
   );
 }

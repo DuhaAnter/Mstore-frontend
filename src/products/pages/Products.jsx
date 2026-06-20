@@ -11,9 +11,11 @@ export default function Products() {
     const fetchAllProducts = async () => {
       try {
         const data = await allproducts();
+        console.log("✅ API Response of all products:", data);
         setProducts(data);
       } catch (error) {
         console.log(error);
+        
         //setError(error);
       } finally {
         setLoading(false);
@@ -22,7 +24,7 @@ export default function Products() {
 
     fetchAllProducts();
   }, []);
-  console.log(products);
+ // console.log(products);
   if (loading) return <div>Loading products...</div>;
   //if (error) return <div>{error}</div>;
 
