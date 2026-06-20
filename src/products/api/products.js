@@ -1,6 +1,6 @@
 // const API_URL = "http://localhost:5000/products/";
 // const API_URL = "https://dummyjson.com/products/";
-const API_URL = "https://mstore-backend.vercel.app/";
+const API_URL = "https://mstore-backend.vercel.app/products";
 
 
 
