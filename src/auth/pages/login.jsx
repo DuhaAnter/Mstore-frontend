@@ -51,7 +51,7 @@ export default function Login() {
         dispatch(setUserInfo(userObj));
 
         
-        console.log("cart item", responseData.data.cart.items);
+        console.log("cart item", responseData.data.cart?.items);
         const totalQuantity = responseData.data.cart?.items?.reduce(
   (sum, item) => sum + item.quantity,
   0
