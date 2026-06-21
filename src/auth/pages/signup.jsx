@@ -10,8 +10,10 @@ import AuthErrorMessage from "../components/AuthErrorMessage";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signupSchema } from "../utils/authValidation"; 
+import { useNavigate } from 'react-router-dom';
 
 export default function Signup() {
+   const navigate = useNavigate();      
   const [error, setError] = useState(""); // Kept for backend API errors
 
   const {
@@ -28,6 +30,7 @@ export default function Signup() {
     try {
       const responseData = await signup(data.name, data.email, data.password);
       console.log(responseData);
+      navigate('/profile');
     } catch (error) {
       console.log(error.response);
       setError(error.response?.data?.message || "sign up failed. Try again.");

@@ -11,19 +11,20 @@ import OAuthButton from "../components/OAuthButton";
 import Divider from "../components/Divider";
 import AuthErrorMessage from "../components/AuthErrorMessage";
 
-
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setUserInfo } from "@/store/sliceses/userSlice";
-
+import { setCartNumber } from "@/store/sliceses/cartSlice";
 
 export default function Login() {
   const [backendError, setBackendError] = useState("");
-  const navigate = useNavigate();          
+  const navigate = useNavigate();
   //redux
-  const user = useSelector(state=>state.user);
-  console.log('user data from redux store',user);
+  const user = useSelector((state) => state.user);
+  //console.log("user data from redux store", user);
   const dispatch = useDispatch();
+  const cart=useSelector(state=>state.cart);
+  console.log(cart)
 
   const {
     register,
@@ -35,10 +36,9 @@ export default function Login() {
 
   // 2. This function only runs if Zod passes all validation checks
   const onFormSubmit = async (data) => {
-
     setBackendError(""); // Clear old errors
     // 'data' is an object containing { email: "...", password: "..." }
-    console.log("Valid Form Data from zod:", data);
+    //console.log("Valid Form Data from zod:", data);
 
     try {
       //Axios login API call goes here using data.email and data.password
@@ -47,13 +47,21 @@ export default function Login() {
       if (responseData.message === "success u r logged in") {
         // store the user date in redux
         const logged = true;
-        const userObj = {logged,...responseData.data}
-        dispatch(setUserInfo(userObj))
+        const userObj = { logged, ...responseData.data };
+        dispatch(setUserInfo(userObj));
 
+        
+        console.log("cart item", responseData.data.cart.items);
+        const totalQuantity = responseData.data.cart?.items?.reduce(
+  (sum, item) => sum + item.quantity,
+  0
+) || 0;
 
+dispatch(setCartNumber(totalQuantity));
 
-        navigate('/profile');
-       
+console.log("computed total:", totalQuantity);
+
+navigate("/profile");
       }
     } catch (error) {
       console.log(error);

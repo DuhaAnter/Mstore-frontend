@@ -1,0 +1,14 @@
+-- If you can calculate something from existing state or props, don't put it in state.
+-- Because colors depends entirely on product.variants, it's derived data, not state.
+-- Don't store variants in state You already have: setProduct(data.product) which now contains the variants.
+-- Tailwind can't detect dynamically constructed class names.
+
+
+-- React wants an array.
+But Set isn't an array.
+So
+[...new Set(...)]
+converts it back into an array.
+
+
+-- Notice that after logging in, the frontend never has to manually attach the token to requests. That's one of the main advantages of using httpOnly cookies.

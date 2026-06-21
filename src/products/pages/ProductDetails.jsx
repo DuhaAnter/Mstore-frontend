@@ -2,36 +2,77 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { productById, relatedProducts } from "../api/products";
 import ProductsGrid from "../components/ProductsGrid";
+import { addToCart } from "@/user/api/cart";
+import { useDispatch } from "react-redux";
+import { set } from "zod";
+import { setCartNumber } from "@/store/sliceses/cartSlice";
 
 export default function ProductDetails() {
-  const [selectedColor, setSelectedColor] = useState("black");
-
-  const colors = [
-    { id: "orange", color: "bg-orange-500" },
-    { id: "green", color: "bg-green-400" },
-    { id: "black", color: "bg-black" },
-    { id: "white", color: "bg-white border border-gray-300" },
-  ];
-
-  const [selectedSize, setSelectedSize] = useState("L");
-
-  const sizes = ["S", "M", "L", "XL", "XXL"];
-
+  const dispatch = useDispatch();
+  const [selectedColor, setSelectedColor] = useState(null);
+  const [selectedSize, setSelectedSize] = useState(null);
   const [count, setCount] = useState(1);
-
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  //derived data
+  const colors = [...new Set(product?.variants?.map((v) => v.color) ?? [])];
+  const sizes = [
+    ...new Set(
+      product?.variants
+        //If no color has been selected, keep everything. Otherwise, only keep variants whose color matches the selected color.
+        ?.filter((v) => !selectedColor || v.color === selectedColor)
+        .map((v) => v.size) ?? [],
+    ),
+  ];
+  //**more readable code for the sizes */
+  // // Start with all variants
+  // let filteredVariants = product?.variants ?? [];
 
+  // // If the user selected a color, keep only that color
+  // if (selectedColor) {
+  //   filteredVariants = filteredVariants.filter(
+  //     (v) => v.color === selectedColor,
+  //   );
+  // }
+
+  // // Get only the sizes
+  // const sizeList = filteredVariants.map((v) => v.size);
+
+  // // Remove duplicates
+  // const sizes = [...new Set(sizeList)];
+
+  const selectedVariant =
+    product?.variants?.find(
+      (v) => v.color === selectedColor && v.size === selectedSize,
+    ) ?? null;
+
+  const lowestVariant = product?.variants?.find((v) => Math.min(v.price));
+
+  //handlers
+  const handleAddToCart = async (variantId, quantity) => {
+    try {
+      const response = await addToCart(variantId, quantity);
+      console.log(response);
+      console.log(response.data.items);
+      const totalQuantity =
+        response.data.items?.reduce(
+          (sum, item) => sum + item.quantity,
+          0,
+        ) || 0;
+
+      dispatch(setCartNumber(totalQuantity));
+    } catch (error) {
+      console.log("fail from handles add to cart", error);
+    }
+  };
   useEffect(() => {
     if (id) {
       const fetchProductById = async () => {
         try {
           const data = await productById(id);
-
           setProduct(data.product);
-          //console.log(data.product);
         } catch (error) {
           console.log(error);
         } finally {
@@ -50,7 +91,6 @@ export default function ProductDetails() {
       try {
         const data = await relatedProducts(product.categoryId);
         setProducts(data.products);
-       console.log(data.products);
       } catch (error) {
         console.log(error);
       }
@@ -62,7 +102,7 @@ export default function ProductDetails() {
   if (loading) {
     return <div>waiiiiiiiiiiiiiiiiiiiiiiiiit</div>;
   }
-
+  console.log(selectedVariant, count);
   return (
     <div className="p-4 md:p-10 max-w-7xl mx-auto">
       <div className="prd flex flex-col lg:flex-row gap-6 ">
@@ -70,7 +110,6 @@ export default function ProductDetails() {
           <img
             // src={product.images?.[0]}
             src={product.imageURL}
-
             alt="Pink Dress"
             className="w-full h-full object-cover"
           />
@@ -84,13 +123,15 @@ export default function ProductDetails() {
             <span className="text-sm text-gray-500">
               {/* ({product.reviews.length} Reviews) */}
               (0 Reviews)
-
             </span>
           </div>
 
           {/* <p className="text-3xl font-semibold mt-4">${product.price}</p> */}
-          <p className="text-3xl font-semibold mt-4">$10</p>
-
+          <p className="text-3xl font-semibold mt-4">
+            {selectedVariant
+              ? `$ ${selectedVariant.price}`
+              : `From: $ ${lowestVariant.price}`}
+          </p>
 
           <div className="mt-6">
             <h2 className="text-xl font-semibold mb-2">Description</h2>
@@ -105,21 +146,23 @@ export default function ProductDetails() {
             <div>
               <p className="font-medium mb-2">Color</p>
               <div className="flex gap-3">
-                {colors.map(({ id, color }) => (
+                {colors.map((color) => (
                   <button
-                    key={id}
-                    onClick={() => setSelectedColor(id)}
+                    key={color}
+                    onClick={() => setSelectedColor(color)}
                     className={`
-                  w-9 h-9 rounded-full p-1 transition-all duration-200
+                  w-12 h-12 rounded-full p-1 transition-all duration-200
                   ${
-                    selectedColor === id
-                      ? "ring-1 ring-black ring-offset-1 scale-110"
+                    selectedColor === color
+                      ? "ring-1 ring-gray-400 ring-offset-1 scale-110"
                       : "hover:scale-105"
                   }
                 `}
                   >
                     <div
-                      className={`${color} w-full h-full rounded-full shadow-sm`}
+                      className={`w-full h-full rounded-full shadow-sm`}
+                      //Tailwind can't detect dynamically constructed class names.
+                      style={{ backgroundColor: color }}
                     />
                   </button>
                 ))}
@@ -135,7 +178,7 @@ export default function ProductDetails() {
                     key={size}
                     onClick={() => setSelectedSize(size)}
                     className={`
-                  w-12 h-12 rounded-2xl border-2 transition-all duration-200 text-sm font-medium
+                  w-12 h-12 rounded border-2 transition-all duration-200 text-sm font-medium
                   ${
                     selectedSize === size
                       ? "bg-black text-white border-black"
@@ -170,7 +213,21 @@ export default function ProductDetails() {
               </button>
             </div>
 
-            <button className="cursor-pointer flex-1 bg-black text-white rounded-2xl py-4 text-lg font-medium hover:bg-gray-900 transition">
+            <button
+              onClick={() => {
+                console.log(selectedVariant.id, count);
+                handleAddToCart(selectedVariant.id, count);
+              }}
+              disabled={!selectedVariant}
+              className={`
+    flex-1 rounded-2xl py-4 text-lg font-medium transition
+    ${
+      selectedVariant
+        ? "bg-black text-white hover:bg-gray-900 cursor-pointer"
+        : "bg-gray-300 text-gray-500 cursor-not-allowed"
+    }
+  `}
+            >
               Add to Cart
             </button>
           </div>
@@ -185,9 +242,6 @@ export default function ProductDetails() {
           <ProductsGrid products={products}></ProductsGrid>
         </div>
       </div>
-
-
     </div>
-    
   );
 }
