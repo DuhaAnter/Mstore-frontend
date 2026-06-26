@@ -12,3 +12,6 @@ converts it back into an array.
 
 
 -- Notice that after logging in, the frontend never has to manually attach the token to requests. That's one of the main advantages of using httpOnly cookies.
+
+-- From Vite documentation:
+- Only environment variables prefixed with VITE_ are exposed to your client-side code(browser). This is to prevent accidentally leaking sensitive environment variables to the client.

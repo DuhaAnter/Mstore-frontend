@@ -4,8 +4,8 @@ import axios from "axios";
 // CRITICAL LINE: This tells Axios to send and receive cookies automatically
 axios.defaults.withCredentials = true;
 
-// const API_URL = "http://localhost:5000/users/";
-const API_URL = "https://mstore-backend.vercel.app/users/";
+const API_URL = `${import.meta.env.VITE_API_URL}users/`;
+
 
 
 export const login = async (email, password) => {

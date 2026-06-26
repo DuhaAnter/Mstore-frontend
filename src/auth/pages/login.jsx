@@ -20,7 +20,7 @@ export default function Login() {
   const [backendError, setBackendError] = useState("");
   const navigate = useNavigate();
   //redux
-  const user = useSelector((state) => state.user);
+ // const user = useSelector((state) => state.user);
   //console.log("user data from redux store", user);
   const dispatch = useDispatch();
   const cart=useSelector(state=>state.cart);

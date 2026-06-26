@@ -1,8 +1,7 @@
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
-//  const API_URL = "http://localhost:5000/cart/";
-const API_URL = "https://mstore-backend.vercel.app/cart/";
+ const API_URL = `${import.meta.env.VITE_API_URL}cart/`
 
 
 export const addToCart = async(variantId,quantity)=>{

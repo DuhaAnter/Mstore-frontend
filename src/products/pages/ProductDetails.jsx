@@ -4,7 +4,6 @@ import { productById, relatedProducts } from "../api/products";
 import ProductsGrid from "../components/ProductsGrid";
 import { addToCart } from "@/user/api/cart";
 import { useDispatch } from "react-redux";
-import { set } from "zod";
 import { setCartNumber } from "@/store/sliceses/cartSlice";
 
 export default function ProductDetails() {
@@ -54,7 +53,7 @@ export default function ProductDetails() {
   const handleAddToCart = async (variantId, quantity) => {
     try {
       const response = await addToCart(variantId, quantity);
-      console.log(response);
+      console.log('response of addToCart',response);
       console.log(response.data.items);
       const totalQuantity =
         response.data.items?.reduce(
@@ -102,7 +101,7 @@ export default function ProductDetails() {
   if (loading) {
     return <div>waiiiiiiiiiiiiiiiiiiiiiiiiit</div>;
   }
-  console.log(selectedVariant, count);
+  console.log('selectedVariant: ',selectedVariant,'its quantity', count);
   return (
     <div className="p-4 md:p-10 max-w-7xl mx-auto">
       <div className="prd flex flex-col lg:flex-row gap-6 ">
@@ -215,7 +214,7 @@ export default function ProductDetails() {
 
             <button
               onClick={() => {
-                console.log(selectedVariant.id, count);
+                console.log('data sent to handler ',selectedVariant.id, count);
                 handleAddToCart(selectedVariant.id, count);
               }}
               disabled={!selectedVariant}

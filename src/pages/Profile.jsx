@@ -1,3 +1,4 @@
+import { clearCartNumber } from "@/store/sliceses/cartSlice";
 import { clearUserInfo } from "@/store/sliceses/userSlice";
 import AccountNav from "@/user/components/AccountNav";
 import { useState } from "react";
@@ -43,7 +44,7 @@ export default function Profile() {
               Discard
             </button>
             <button
-              onClick={() => dispatch(clearUserInfo())}
+              onClick={() => {dispatch(clearUserInfo()); dispatch(clearCartNumber());}}
               className="px-6 py-1.5 text-sm sm:py-2 sm:px-10 sm:text-lg font-medium text-white bg-black border-2 border-black rounded-full cursor-pointer"
             >
               Log out
