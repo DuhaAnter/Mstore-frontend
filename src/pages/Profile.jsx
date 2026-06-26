@@ -32,7 +32,9 @@ export default function Profile() {
       <div className="border-b pb-5">
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center">
           <div>
-            <h1 className="text-2xl font-semibold mb-5">Account</h1>
+            <h1 className="text-2xl font-semibold mb-5">
+              {`Hi ${user.userName}`}
+            </h1>
             <p className="leading-relaxed mb-5">
               View and Edit your personal Info below
             </p>

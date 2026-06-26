@@ -30,7 +30,7 @@ export default function Header() {
   const closeMenu = () => setIsOpen(false);
 
   const cart = useSelector((state) => state.cart);
-  console.log("cart data from redux store", cart); // Object { number: 0 }
+  //console.log("cart data from redux store", cart); // Object { number: 0 }
 
   return (
     <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-100 shadow-sm">

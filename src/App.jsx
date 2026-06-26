@@ -22,27 +22,28 @@ import Products from "./products/pages/Products";
 import ProductDetails from "./products/pages/ProductDetails";
 import Cart from "./user/pages/Cart";
 import Orders from "./user/pages/Orders";
-
+import WithHeader from "./Components/WithHeader";
 
 function App() {
   return (
     <>
       <BrowserRouter>
-        <Header />
         <Routes>
-          <Route path="/" element={<Home></Home>} />
+          <Route element={<WithHeader />}>
+            <Route path="/" element={<Home></Home>} />
+            <Route path="/products" element={<Products />} />
+            <Route path="/product-details/:id" element={<ProductDetails />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route element={<ProtectedRoutes />}>
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/profile/orders" element={<Orders />} />
+            </Route>
+          </Route>
+          {/* without header */}
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/forgetpass" element={<Forgetpass />} />
-          <Route path="/products" element={<Products/>}/>
-          <Route path="/product-details/:id" element={<ProductDetails/>}/>
-          <Route path="/cart" element={<Cart/>}/>
 
-          <Route element={<ProtectedRoutes/>}>
-              <Route path='/profile' element={<Profile/>}/>
-              <Route path='/profile/orders' element={<Orders/>}/>
-
-          </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
