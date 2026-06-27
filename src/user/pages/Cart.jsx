@@ -7,7 +7,7 @@ export default function Cart() {
   const [count1, setCount1] = useState(1);
 
   return (
-    <MainLayout>
+    
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 p-4 md:p-10">
         <div className="cart lg:col-span-2 space-y-6">
           <h1 className="font-bold text-2xl md:text-3xl mb-5">My Cart</h1>
@@ -71,6 +71,6 @@ export default function Cart() {
           </div>
         </div>
       </div>
-    </MainLayout>
+    
   );
 }
