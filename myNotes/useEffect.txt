@@ -1,0 +1,22 @@
+-- A dependency array does not mean "watch the server". It means "watch this React state variable."
+
+-- When you wrote:
+
+useEffect(() => {
+  fetchViewCart();
+}, [variants]);
+
+you were thinking:
+
+"When the cart changes, fetch it again."
+
+But React interprets it as:
+
+"Whenever the variants state changes, run this effect."
+
+The problem is you are the one changing variants inside the effect. Hence the infinite loop.
+
+-- Ask yourself:
+
+"Does this effect change one of its own dependencies?"
+- if The answer is yes, so it's a red flag (infinite loop).

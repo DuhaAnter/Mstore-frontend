@@ -23,6 +23,7 @@ import ProductDetails from "./products/pages/ProductDetails";
 import Cart from "./user/pages/Cart";
 import Orders from "./user/pages/Orders";
 import WithHeader from "./Components/WithHeader";
+import Checkout from "./user/pages/Checkout";
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
             <Route element={<ProtectedRoutes />}>
               <Route path="/profile" element={<Profile />} />
               <Route path="/profile/orders" element={<Orders />} />
+              <Route path="/checkout" element={<Checkout/>}/>
             </Route>
           </Route>
           {/* without header */}

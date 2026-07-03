@@ -2,31 +2,41 @@ import { useEffect, useState } from "react";
 import OrderSummary from "../components/OrderSummary";
 import { FaTrash } from "react-icons/fa";
 import { removeCartItem, updateCartItem, viewCart } from "../api/cart";
+import { useNavigate } from "react-router";
+import { LiaCartPlusSolid } from "react-icons/lia";
 
 export default function Cart() {
   const [loading, setLoading] = useState(true);
   const [variants, setVariants] = useState([]);
+  const [summary, setSummary] = useState({});
+  const [cpnValid, setCpnValid] = useState(null);
 
+  const navigate = useNavigate();
   // calling api
+  const fetchViewCart = async () => {
+    try {
+      const getCart = await viewCart();
+      console.log("data of view cart -->", getCart.data);
+      setVariants(getCart.data.cart);
+      setSummary(getCart.data.summary);
+    } catch (error) {
+      console.log("error fetching veiw cart", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchViewCart = async () => {
-      try {
-        const data = await viewCart();
-        // console.log("data of view cart -->", data.data);
-        setVariants(data.data);
-      } catch (error) {
-        console.log("error fetching veiw cart", error);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchViewCart();
-  }, [variants]);
+  }, [cpnValid]);
   //handlers
   const handleItemQuantity = async (id, quantity) => {
     try {
       const update = await updateCartItem(id, quantity);
       console.log(update);
+      if (update.status === "success") {
+        fetchViewCart();
+      }
     } catch (error) {
       console.log("error in handle item quantity", error);
     }
@@ -35,6 +45,9 @@ export default function Cart() {
     try {
       const remove = await removeCartItem(id);
       console.log(remove);
+      if (remove.status === "success") {
+        fetchViewCart();
+      }
     } catch (error) {
       console.log("error deleting item", error);
     }
@@ -44,6 +57,27 @@ export default function Cart() {
     return (
       <div className="flex justify-center items-center">
         <p>loading cart</p>
+      </div>
+    );
+  if (variants.length === 0)
+    return (
+      <div className="p-4 md:p-10">
+        <div className="flex flex-col items-center justify-center py-16 text-center border-2 border-dashed  border-[#cfc4c5]">
+          <LiaCartPlusSolid className=" text-5xl mb-2" />
+
+          <h2 className="font-headline-md text-headline-md  mb-1">
+            No Items yet
+          </h2>
+          <p className="font-body-lg   mb-3">
+            Start your journey with our latest collection.
+          </p>
+          <button
+            onClick={() => navigate("/products")}
+            className="bg-black text-white px-10 py-4 font-bold transition-opacity hover:opacity-90"
+          >
+            SHOP NOW
+          </button>
+        </div>
       </div>
     );
   return (
@@ -131,7 +165,11 @@ export default function Cart() {
 
       <div className="order lg:col-span-1">
         <div className="lg:sticky lg:top-24">
-          <OrderSummary />
+          <OrderSummary
+            summary={summary}
+            isCpnValid={setCpnValid}
+            cpnValid={cpnValid}
+          />
         </div>
       </div>
     </div>

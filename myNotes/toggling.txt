@@ -1,0 +1,80 @@
+-- Instead of giving React the new value, you give it a function:
+
+setApplyCpn((prev) => {
+    return !prev;
+});
+
+React says:
+
+"I'll call this function and give it the current state."
+
+So if the current state is:
+
+false
+
+React does:
+
+(prev) => !prev
+
+becomes
+
+(false) => !false
+
+which returns
+
+true
+
+So React sets:
+
+applyCpn = true
+
+Now click the button again.
+
+Current state:
+
+true
+
+React calls:
+
+(true) => !true
+
+which returns
+
+false
+
+Now:
+
+applyCpn = false
+
+So every click does:
+
+false
+    ↓
+true
+    ↓
+false
+    ↓
+true
+    ↓
+false
+
+That's why it's called toggling.
+
+-- What is prev?
+
+prev simply means:
+
+the previous (current) state value.
+
+
+-- Simple Rule
+If you already know the new value:
+setApplyCpn(true);
+If the new value depends on the previous value (like toggling, incrementing, or decrementing):
+setApplyCpn((prev) => !prev);
+
+or, for a counter:
+
+setCount((prev) => prev + 1);
+
+This functional form is the recommended pattern whenever your new state is calculated from the current state.

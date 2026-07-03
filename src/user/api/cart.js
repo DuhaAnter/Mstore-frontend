@@ -20,3 +20,7 @@ export const removeCartItem = async (id) => {
     const response = await axios.delete(`${API_URL}${id}`);
     return response.data;
 };
+export const validateCpn = async (code) => {
+    const response = await axios.post(`${API_URL}coupon`, { code });
+    return response.data;
+};
