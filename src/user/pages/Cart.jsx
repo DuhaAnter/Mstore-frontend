@@ -169,6 +169,9 @@ export default function Cart() {
             summary={summary}
             isCpnValid={setCpnValid}
             cpnValid={cpnValid}
+            buttonText="Proceed to Checkout"
+            onButtonClick={() => navigate("/checkout")}
+            showCouponSection={true}
           />
         </div>
       </div>

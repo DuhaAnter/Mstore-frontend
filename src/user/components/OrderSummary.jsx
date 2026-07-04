@@ -1,12 +1,19 @@
 import { useState } from "react";
 import { validateCpn } from "../api/cart";
-import { useNavigate } from "react-router";
 
-export default function OrderSummary({ summary, isCpnValid, cpnValid }) {
+export default function OrderSummary({
+  summary,
+  isCpnValid,
+  cpnValid,
+  buttonText,
+  onButtonClick,
+  showCouponSection,
+  showProductsSection,
+  variants,
+}) {
   //console.log("products from inside summary", summary);
   const [applyCpn, setApplyCpn] = useState(false);
   const [code, setCode] = useState("");
-  const navigate = useNavigate();
 
   //handlers
   const handleApplyCoupon = async (code) => {
@@ -21,19 +28,22 @@ export default function OrderSummary({ summary, isCpnValid, cpnValid }) {
       console.log("failed to apply cpn", error);
     }
   };
-
+  //helper
+  const formatPrice = (value) => Number(value).toFixed(2);
   return (
     <div className="max-w-md mx-auto p-6 border border-gray-100 shadow-sm rounded-3xl sm:p-8">
       {/* Header */}
-      <h1 className="font-semibold text-2xl mb-2">Order Summary</h1>
+      <h1 className="font-medium text-2xl mb-2">Order Summary</h1>
 
       {/* Coupon Button */}
-      <button
-        onClick={() => setApplyCpn((prev) => !prev)}
-        className="underline text-sm font-medium text-gray-700 hover:text-black transition mb-4 cursor-pointer"
-      >
-        <span>Have a coupon?</span>
-      </button>
+      {showCouponSection && (
+        <button
+          onClick={() => setApplyCpn((prev) => !prev)}
+          className="underline text-sm font-medium text-gray-700 hover:text-black transition mb-4 cursor-pointer"
+        >
+          <span>Have a coupon?</span>
+        </button>
+      )}
 
       {applyCpn && (
         <div className="flex flex-col  gap-3 mb-6 animate-in fade-in duration-200">
@@ -53,6 +63,42 @@ export default function OrderSummary({ summary, isCpnValid, cpnValid }) {
           </button>
         </div>
       )}
+      {showProductsSection &&
+        variants?.map((v) => (
+          <div
+            key={v.id}
+            className=" flex items-center gap-2 my-3 border-b border-gray-100 pb-2"
+          >
+            <div className="w-24 h-24 shrink overflow-hidden rounded-xl">
+              <img
+                src={v.variant.product.imageURL}
+                className="w-full h-full object-cover"
+              />
+            </div>
+
+            <div className=" flex-1">
+              <div className=" flex flex-col gap-1">
+                <h1 className="font-semibold text-sm  truncate">
+                  {v.variant.product.title}
+                </h1>
+                <div className="flex justify-between">
+                  <div>
+                    <p className="text-xs">
+                      <strong>Size: </strong>
+                      {v.variant.size}
+                    </p>
+                    <p className="text-xs">
+                      <strong>Color: </strong>
+                      {v.variant.color}
+                    </p>
+                  </div>
+
+                  <p className="text-sm font-semibold">$ {v.variant.price}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
 
       {/* Pricing Rows */}
       {cpnValid === true && (
@@ -78,17 +124,29 @@ export default function OrderSummary({ summary, isCpnValid, cpnValid }) {
       <div className="space-y-4 border-b border-gray-100 pb-6 mb-6">
         <div className="flex justify-between items-center">
           <p className="font-medium ">Sub Total</p>
-          <p className=" font-medium">$ {summary.subtotal}</p>
+          <p className=" font-semibold">$ {formatPrice(summary.subtotal)}</p>
         </div>
 
         <div className="flex justify-between items-center">
-          <p className="">Shipping and Handling</p>
-          <p className=" text-sm"> ______ </p>
+          <p className="text-sm font-medium">Shipping and Handling</p>
+          <p className=" text-sm font-semibold"> Free </p>
         </div>
+        {summary.discount === 0 ? (
+          ""
+        ) : (
+          <div className="flex items-center justify-between transition ">
+            <p className="text-sm font-medium">Discount</p>
+            <p className="text-sm font-semibold text-red-600">
+              - ${formatPrice(summary.discount)}
+            </p>
+          </div>
+        )}
 
         <div className="flex justify-between items-center">
-          <p className="">Estimated Tax</p>
-          <p className="">$ {summary.subtotal === 0 ? 0 : summary.tax}</p>
+          <p className="text-sm font-medium">Estimated Tax</p>
+          <p className="text-sm font-semibold">
+            $ {summary.subtotal === 0 ? 0 : formatPrice(summary.tax)}
+          </p>
         </div>
       </div>
 
@@ -96,16 +154,16 @@ export default function OrderSummary({ summary, isCpnValid, cpnValid }) {
       <div className="flex justify-between items-center mb-8">
         <p className="font-bold text-xl ">Total</p>
         <p className="font-bold text-xl ">
-          $ {summary.subtotal === 0 ? 0 : summary.total}
+          $ {summary.subtotal === 0 ? 0 : formatPrice(summary.total)}
         </p>
       </div>
 
       {/* Checkout Button */}
       <button
-        onClick={() => navigate("/checkout")}
+        onClick={onButtonClick}
         className="w-full text-white bg-black py-4 px-6 rounded-2xl font-medium cursor-pointer hover:bg-gray-900 transition-all active:scale-[0.99]"
       >
-        Checkout
+        {buttonText}
       </button>
     </div>
   );

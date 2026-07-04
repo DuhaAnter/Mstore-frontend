@@ -1,0 +1,12 @@
+-- Why frontend formatting is the right display layer
+
+Because formatting is a presentation concern.
+
+Your backend should care about:
+
+correct calculations
+returning numeric values
+
+Your frontend should care about:
+
+how the money looks to the user.

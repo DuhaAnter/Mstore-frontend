@@ -1,9 +1,32 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaCcVisa, FaCcMastercard, FaCcAmex } from "react-icons/fa";
 import { GiCash } from "react-icons/gi";
+import OrderSummary from "../components/OrderSummary";
+import { viewCart } from "../api/cart";
 
 export default function Checkout() {
   const [paymentMethod, setPaymentMethod] = useState("card");
+  const [variants, setVariants] = useState([]);
+  const [summary, setSummary] = useState({});
+  const [loading, setLoading] = useState(true);
+
+  // calling api
+  const fetchViewCart = async () => {
+    try {
+      const getCart = await viewCart();
+      console.log("data of view cart -->", getCart.data);
+      setVariants(getCart.data.cart);
+      setSummary(getCart.data.summary);
+    } catch (error) {
+      console.log("error fetching veiw cart", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  // use effects
+  useEffect(() => {
+    fetchViewCart();
+  }, []);
 
   return (
     <div className="flex flex-col md:flex-row gap-8 p-4 md:p-10">
@@ -121,7 +144,22 @@ export default function Checkout() {
           </div>
         </form>
       </div>
-      <div className="flex-1 lg:sticky lg:top-24">order summary</div>
+      <div className="flex-1">
+        {loading ? (
+          <div className="flex justify-center items-center">
+            <p>loading Summary</p>
+          </div>
+        ) : (
+          <div className="lg:sticky lg:top-24">
+            <OrderSummary
+              variants={variants}
+              summary={summary}
+              buttonText="Place Order"
+              showProductsSection={true}
+            />
+          </div>
+        )}
+      </div>
     </div>
   );
 }
