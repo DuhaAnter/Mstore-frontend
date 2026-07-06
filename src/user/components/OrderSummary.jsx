@@ -10,7 +10,9 @@ export default function OrderSummary({
   showCouponSection,
   showProductsSection,
   variants,
+  disabled,
 }) {
+  console.log("handler of place order button", onButtonClick);
   //console.log("products from inside summary", summary);
   const [applyCpn, setApplyCpn] = useState(false);
   const [code, setCode] = useState("");
@@ -160,8 +162,14 @@ export default function OrderSummary({
 
       {/* Checkout Button */}
       <button
+        type="button"
         onClick={onButtonClick}
-        className="w-full text-white bg-black py-4 px-6 rounded-2xl font-medium cursor-pointer hover:bg-gray-900 transition-all active:scale-[0.99]"
+        disabled={disabled}
+        className={`w-full rounded py-3 font-medium transition ${
+          disabled
+            ? "bg-black/60 text-white cursor-not-allowed"
+            : "bg-black text-white hover:bg-gray-900"
+        }`}
       >
         {buttonText}
       </button>

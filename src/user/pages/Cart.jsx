@@ -16,7 +16,7 @@ export default function Cart() {
   const fetchViewCart = async () => {
     try {
       const getCart = await viewCart();
-      console.log("data of view cart -->", getCart.data);
+      //console.log("data of view cart -->", getCart.data);
       setVariants(getCart.data.cart);
       setSummary(getCart.data.summary);
     } catch (error) {
