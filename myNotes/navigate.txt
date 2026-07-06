@@ -1,0 +1,58 @@
+-- navigate can take two things:
+
+navigate(path, options).
+
+The shape is basically:
+
+navigate("/my-orders", {
+  state: {
+    successMessage: "Your order was placed successfully",
+  },
+});
+
+Meaning:
+go to /my-orders
+and carry some temporary data with you to that page
+
+That state is React Router navigation state.
+
+Think of it like:
+
+“Go to this page, and while going there, hand it this little object.”
+
+--Why this is useful?
+Because you often want to go to another page and tell it something about why you arrived there.
+Examples:
+-after checkout → tell My Orders: "show success banner"
+-after login → tell home page: "welcome back"
+-after editing profile → tell account page: "profile updated successfully"
+
+Instead of putting all of that in the URL, you can pass it through navigate(..., { state }).
+
+
+-- How does MyOrders(the other page navigate is going to) receive it?
+
+With useLocation() from React Router.
+
+In MyOrders.jsx
+import { useLocation } from "react-router-dom";
+
+export default function MyOrders() {
+  const location = useLocation();
+
+  console.log(location);
+}
+
+Inside location, there will be a state property.
+
+So:
+
+const location = useLocation();
+console.log(location.state);
+
+will print:
+
+{
+  successMessage: "Your order was placed successfully.",
+  newOrderId: "abc123"
+}

@@ -7,12 +7,16 @@ import { viewCart } from "../api/cart";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { checkoutSchema } from "../utils/checkoutValidation";
+import BackendError from "@/Components/BackendError";
+import { createOrder } from "../api/checkout";
+import { useNavigate } from "react-router";
 
 export default function Checkout() {
   const [variants, setVariants] = useState([]);
   const [summary, setSummary] = useState({});
   const [loading, setLoading] = useState(true);
-
+  const [backendError, setBackendError] = useState("");
+  const navigate = useNavigate();
   //form validation
   const {
     register,
@@ -23,7 +27,7 @@ export default function Checkout() {
     resolver: zodResolver(checkoutSchema),
     //That way these options are selected from the start.
     defaultValues: {
-      paymentMethod: "card",
+      paymentMethod: "CREDIT_CARD",
       saveInfo: false,
     },
   });
@@ -32,6 +36,24 @@ export default function Checkout() {
   // handlers
   const onFormSubmit = async (data) => {
     console.log("data object from onFormSubmit", data);
+    setBackendError(""); // Clear old errors
+    try {
+      const result = await createOrder(data);
+      console.log(result);
+      if (result.status === "success") {
+        navigate("/profile/orders", {
+          state: {
+            successMessage: "Your order was placed successfully",
+            newOrderId: result.data.id,
+          },
+        });
+      }
+    } catch (error) {
+      console.log("error calling POST/order", error.response?.data);
+      setBackendError(
+        error.response?.data?.message || "order failed. Try again.",
+      );
+    }
   };
 
   // calling api
@@ -57,6 +79,8 @@ export default function Checkout() {
       <div className="flex-2">
         <h1 className="font-bold text-3xl md:text-3xl mb-5">Checkout</h1>
         <hr className="border-gray-200" />
+
+        <BackendError message={backendError} />
 
         <form
           id="checkout-form"
@@ -219,7 +243,7 @@ export default function Checkout() {
                 <input
                   {...register("paymentMethod")}
                   type="radio"
-                  value="card"
+                  value="CREDIT_CARD"
                   className="h-5 w-5 accent-black"
                 />
                 <p className="flex flex-col text-sm">
@@ -250,7 +274,7 @@ export default function Checkout() {
                 <input
                   {...register("paymentMethod")}
                   type="radio"
-                  value="cod"
+                  value="CASH_ON_DELIVERY"
                   className="h-5 w-5 accent-black"
                 />
                 <p className="flex flex-col text-sm">

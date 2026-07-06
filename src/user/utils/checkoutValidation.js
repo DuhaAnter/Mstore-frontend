@@ -41,7 +41,7 @@ export const checkoutSchema = z.object({
         .min(2, "Governorate must be at least 2 characters")
         .max(25, "Governorate can't be more than 25 characters"),
 
-    paymentMethod: z.enum(["card", "cod"], {
+    paymentMethod: z.enum(["CASH_ON_DELIVERY", "CREDIT_CARD"], {
         required_error: "Please choose a payment method",
     }),
 
