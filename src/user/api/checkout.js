@@ -10,6 +10,6 @@ export const createOrder = async (orderData) => {
     return response.data;
 };
 export const getAllOrders = async () => {
-    const response = await axios.get(API_URL);
+    const response = await axios.get(`${API_URL}/me`);
     return response.data;
 };
