@@ -1,9 +1,10 @@
+import { logout } from "@/auth/api/auth";
 import { clearCartNumber } from "@/store/sliceses/cartSlice";
 import { clearUserInfo } from "@/store/sliceses/userSlice";
 import AccountNav from "@/user/components/AccountNav";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 export default function Profile() {
   const user = useSelector((state) => state.user);
@@ -25,10 +26,20 @@ export default function Profile() {
   const handleUpdatePassword = () => {
     setChangePassword(false);
   };
+  const handleLogout = async () => {
+    try {
+      const reply = await logout();
+      console.log(reply);
+      dispatch(clearUserInfo());
+      dispatch(clearCartNumber());
+    } catch (error) {
+      console.log("error logging out", error.response?.data);
+    }
+  };
 
   return (
     <div className=" py-5 px-5 sm:px-10">
-        <AccountNav />
+      <AccountNav />
       <div className="border-b pb-5">
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center">
           <div>
@@ -40,13 +51,14 @@ export default function Profile() {
             </p>
           </div>
           <div className="sm:px-10 flex ">
-            <button 
-            onClick={()=>navigate('/')}
-            className="px-6 py-1.5 text-sm sm:py-2 sm:px-10 sm:text-lg font-medium border-2 border-black rounded-full mr-5 cursor-pointer">
+            <button
+              onClick={() => navigate("/")}
+              className="px-6 py-1.5 text-sm sm:py-2 sm:px-10 sm:text-lg font-medium border-2 border-black rounded-full mr-5 cursor-pointer"
+            >
               Discard
             </button>
             <button
-              onClick={() => {dispatch(clearUserInfo()); dispatch(clearCartNumber());}}
+              onClick={handleLogout}
               className="px-6 py-1.5 text-sm sm:py-2 sm:px-10 sm:text-lg font-medium text-white bg-black border-2 border-black rounded-full cursor-pointer"
             >
               Log out
@@ -127,7 +139,7 @@ export default function Profile() {
             </button>
           </div>
         )}
-        
+
         <p className="font-semibold ">Password:</p>
         {changePassword ? (
           <div className="flex flex-col items-start gap-3 mt-3">

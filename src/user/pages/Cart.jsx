@@ -65,15 +65,15 @@ export default function Cart() {
         <div className="flex flex-col items-center justify-center py-16 text-center border-2 border-dashed  border-[#cfc4c5]">
           <LiaCartPlusSolid className=" text-5xl mb-2" />
 
-          <h2 className="font-headline-md text-headline-md  mb-1">
+          <h2 className="font-medium  mb-1">
             No Items yet
           </h2>
-          <p className="font-body-lg   mb-3">
+          <p className="font-semibold   mb-3">
             Start your journey with our latest collection.
           </p>
           <button
             onClick={() => navigate("/products")}
-            className="bg-black text-white px-10 py-4 font-bold transition-opacity hover:opacity-90"
+            className="bg-black text-white px-10 py-4 font-bold transition-opacity hover:opacity-90 cursor-pointer rounded-2xl"
           >
             SHOP NOW
           </button>
