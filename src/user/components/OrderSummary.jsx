@@ -165,7 +165,7 @@ export default function OrderSummary({
         type="button"
         onClick={onButtonClick}
         disabled={disabled}
-        className={`w-full rounded py-3 font-medium transition ${
+        className={`w-full rounded py-3 font-medium transition cursor-pointer ${
           disabled
             ? "bg-black/60 text-white cursor-not-allowed"
             : "bg-black text-white hover:bg-gray-900"

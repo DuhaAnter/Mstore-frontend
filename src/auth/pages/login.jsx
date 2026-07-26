@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { login } from "../api/auth";
-import { Link } from "react-router";
+import { Link, useLocation } from "react-router";
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -20,11 +20,14 @@ export default function Login() {
   const [backendError, setBackendError] = useState("");
   const navigate = useNavigate();
   //redux
- // const user = useSelector((state) => state.user);
+  // const user = useSelector((state) => state.user);
   //console.log("user data from redux store", user);
   const dispatch = useDispatch();
-  const cart=useSelector(state=>state.cart);
-  console.log(cart)
+  const cart = useSelector((state) => state.cart);
+  console.log(cart);
+
+  const location = useLocation();
+  const successMessage = location.state?.successMessage;
 
   const {
     register,
@@ -50,18 +53,18 @@ export default function Login() {
         const userObj = { logged, ...responseData.data };
         dispatch(setUserInfo(userObj));
 
-        
         console.log("cart item", responseData.data.cart?.items);
-        const totalQuantity = responseData.data.cart?.items?.reduce(
-  (sum, item) => sum + item.quantity,
-  0
-) || 0;
+        const totalQuantity =
+          responseData.data.cart?.items?.reduce(
+            (sum, item) => sum + item.quantity,
+            0,
+          ) || 0;
 
-dispatch(setCartNumber(totalQuantity));
+        dispatch(setCartNumber(totalQuantity));
 
-console.log("computed total:", totalQuantity);
+        console.log("computed total:", totalQuantity);
 
-navigate("/profile");
+        navigate("/profile");
       }
     } catch (error) {
       console.log(error);
@@ -80,6 +83,11 @@ navigate("/profile");
     <>
       <AuthLayout>
         <AuthErrorMessage message={backendError} />
+        {successMessage && (
+          <div className="rounded border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700 text-center font-medium mb-3">
+            {successMessage}
+          </div>
+        )}
         <form
           className="space-y-4 w-full"
           onSubmit={handleSubmit(onFormSubmit)}

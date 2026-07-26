@@ -1,13 +1,15 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { productById, relatedProducts } from "../api/products";
 import ProductsGrid from "../components/ProductsGrid";
 import { addToCart } from "@/user/api/cart";
 import { useDispatch } from "react-redux";
 import { setCartNumber } from "@/store/sliceses/cartSlice";
+import { toast } from "react-toastify";
 
 export default function ProductDetails() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [selectedColor, setSelectedColor] = useState(null);
   const [selectedSize, setSelectedSize] = useState(null);
   const [count, setCount] = useState(1);
@@ -53,17 +55,38 @@ export default function ProductDetails() {
   const handleAddToCart = async (variantId, quantity) => {
     try {
       const response = await addToCart(variantId, quantity);
-      console.log('response of addToCart',response);
+      console.log("response of addToCart", response);
+      //toast.success("Added to cart");
+      toast.success(
+        <div>
+          <p className="font-medium text-black">Added to cart!</p>
+
+          <button
+            onClick={() => navigate("/cart")}
+            className="text-sm underline cursor-pointer"
+          >
+            View Cart
+          </button>
+        </div>,
+      );
       console.log(response.data.items);
       const totalQuantity =
-        response.data.items?.reduce(
-          (sum, item) => sum + item.quantity,
-          0,
-        ) || 0;
+        response.data.items?.reduce((sum, item) => sum + item.quantity, 0) || 0;
 
       dispatch(setCartNumber(totalQuantity));
     } catch (error) {
-      console.log("fail from handles add to cart", error);
+      let message;
+
+      if (!error.response) // which means server is shut down or stopped
+      {
+        message = "Unable to connect to the server. Please try again later.";
+      } else {
+        message = error.response.data.message || "Something went wrong.";
+      }
+
+      toast.error(message);
+
+      console.log("fail from handles add to cart", error.response?.data);
     }
   };
   useEffect(() => {
@@ -101,7 +124,7 @@ export default function ProductDetails() {
   if (loading) {
     return <div>waiiiiiiiiiiiiiiiiiiiiiiiiit</div>;
   }
-  console.log('selectedVariant: ',selectedVariant,'its quantity', count);
+  console.log("selectedVariant: ", selectedVariant, "its quantity", count);
   return (
     <div className="p-4 md:p-10 max-w-7xl mx-auto">
       <div className="prd flex flex-col lg:flex-row gap-6 ">
@@ -214,7 +237,7 @@ export default function ProductDetails() {
 
             <button
               onClick={() => {
-                console.log('data sent to handler ',selectedVariant.id, count);
+                console.log("data sent to handler ", selectedVariant.id, count);
                 handleAddToCart(selectedVariant.id, count);
               }}
               disabled={!selectedVariant}

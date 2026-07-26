@@ -6,14 +6,13 @@ import OAuthButton from "../components/OAuthButton";
 import Divider from "../components/Divider";
 import AuthErrorMessage from "../components/AuthErrorMessage";
 
-
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { signupSchema } from "../utils/authValidation"; 
-import { useNavigate } from 'react-router-dom';
+import { signupSchema } from "../utils/authValidation";
+import { useNavigate } from "react-router-dom";
 
 export default function Signup() {
-   const navigate = useNavigate();      
+  const navigate = useNavigate();
   const [error, setError] = useState(""); // Kept for backend API errors
 
   const {
@@ -30,7 +29,14 @@ export default function Signup() {
     try {
       const responseData = await signup(data.name, data.email, data.password);
       console.log(responseData);
-      navigate('/profile');
+      
+      navigate("/login", {
+        state: {
+          successMessage:
+            `Your account has been created successfully.
+             Please log in to continue.`
+        }
+      });
     } catch (error) {
       console.log(error.response);
       setError(error.response?.data?.message || "sign up failed. Try again.");
@@ -48,7 +54,10 @@ export default function Signup() {
           <h2 className="text-3xl font-bold">Welcome</h2>
           <p className="mt-2 text-gray-600">Create your account</p>
         </div>
-        <form className="space-y-4 w-full" onSubmit={handleRHFSubmit(onFormSubmit)}>
+        <form
+          className="space-y-4 w-full"
+          onSubmit={handleRHFSubmit(onFormSubmit)}
+        >
           <div>
             <input
               type="text"
@@ -57,7 +66,9 @@ export default function Signup() {
               {...register("name")} // RHF Register
             />
             {errors.name && (
-              <span className="text-xs text-red-500 px-4 mt-1 block">{errors.name.message}</span>
+              <span className="text-xs text-red-500 px-4 mt-1 block">
+                {errors.name.message}
+              </span>
             )}
           </div>
           <div>
@@ -68,7 +79,9 @@ export default function Signup() {
               {...register("email")} // RHF Register
             />
             {errors.email && (
-              <span className="text-xs text-red-500 px-4 mt-1 block">{errors.email.message}</span>
+              <span className="text-xs text-red-500 px-4 mt-1 block">
+                {errors.email.message}
+              </span>
             )}
           </div>
           <div>
@@ -79,7 +92,9 @@ export default function Signup() {
               {...register("password")} // RHF Register
             />
             {errors.password && (
-              <span className="text-xs text-red-500 px-4 mt-1 block">{errors.password.message}</span>
+              <span className="text-xs text-red-500 px-4 mt-1 block">
+                {errors.password.message}
+              </span>
             )}
           </div>
           <div>
@@ -90,7 +105,9 @@ export default function Signup() {
               {...register("confirmPassword")} // RHF Register
             />
             {errors.confirmPassword && (
-              <span className="text-xs text-red-500 px-4 mt-1 block">{errors.confirmPassword.message}</span>
+              <span className="text-xs text-red-500 px-4 mt-1 block">
+                {errors.confirmPassword.message}
+              </span>
             )}
           </div>
           <button
@@ -100,7 +117,7 @@ export default function Signup() {
           >
             {isSubmitting ? "Signing up..." : "Sign up"}
           </button>
-          
+
           <Divider />
           <OAuthButton
             title="Sign up with Google"
