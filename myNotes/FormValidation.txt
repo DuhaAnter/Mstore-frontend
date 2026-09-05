@@ -1,3 +1,5 @@
+
+-- npm install react-hook-form zod @hookform/resolvers
 -------------------------------
 1- zod = the rules of the form.
 -------------------------------
@@ -28,3 +30,108 @@ So the flow becomes:
 input fields → useForm collects values → zodResolver sends them to Zod → Zod returns errors or valid data.
 
 That’s the whole big picture.
+
+------------------------------------------------------------------------------
+
+-- what exactly register("email") does.
+
+It says:
+
+"Hey React Hook Form, please start watching this input under the name email"
+
+-- {...register("email")}
+
+- The spread operator simply opens the object and passes each property individually.
+So
+it equals:
+{
+  name: "email",
+
+  onChange: function () {},
+
+  onBlur: function () {},
+
+  ref: function () {},
+}
+
+- If you write <Input register("email") />
+you're trying to pass one prop called register("email"), which doesn't even make sense cause register is an object.
+- JavaScript opens the object.
+
+So React receives
+
+<Input
+  name="email"
+  onChange={...}
+  onBlur={...}
+  ref={...}
+/>
+
+
+
+-- The same thing happens in your Input component
+
+Remember this?
+
+function Input({
+  label,
+  type,
+  id,
+  error,
+  ...props
+}) {
+
+People think this is different.
+
+It isn't.
+
+<input
+  {...props}
+/>
+
+JavaScript opens that object and turns it into
+
+<input
+  placeholder="Enter your email"
+  autoComplete="email"
+/>
+
+That's why your Input component supports any normal HTML input attribute without you listing every single one.
+
+------------------------------------------------------------------------------------
+
+-- <form onSubmit={handleSubmit(onSubmit)}/>
+
+read it as:
+
+"React Hook Form, when the user submits the form, handle everything first. If everything is valid, then call my onSubmit function."
+---------------------------------------------------------------------------------------------
+-- const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(loginSchema),
+    mode: "onBlur",
+  });
+
+- React Hook Form has one question:
+
+"When should I check if the answer is correct?"
+
+That's what mode controls.
+- the default is "onSubmit".
+
+-------------------------------------------------------------------------------------------
+-- zod.refine(
+  (data) => data.password === data.confirmPassword,
+  {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  }
+)
+
+reads as:
+
+"After checking all the fields, compare the password and confirmPassword.
+If they are different, show 'Passwords do not match' under the confirmPassword input."

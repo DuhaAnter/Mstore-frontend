@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import ProductsGrid from "../components/ProductsGrid";
-import { allproducts } from "../api/products";
+import { getProducts } from "../api/products";
 import { FaChevronDown } from "react-icons/fa6";
 import { allCates, allSubCatesInACate } from "../api/categories";
 
@@ -16,7 +16,7 @@ export default function Products() {
   useEffect(() => {
     const fetchAllProducts = async () => {
       try {
-        const data = await allproducts();
+        const data = await getProducts();
         //console.log("✅ API Response of all products:", data);
         setProducts(data);
       } catch (error) {

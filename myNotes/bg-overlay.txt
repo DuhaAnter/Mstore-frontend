@@ -1,0 +1,13 @@
+-- The overlay sits between the image and your content, making the image darker while leaving the text unaffected.
+-- while using the same div it won't work as expected because background-color is painted behind the background-image, so the image completely covers the color.
+-- inset-0 is a Tailwind shortcut that sets all four positioning properties to 0.
+
+This:
+"absolute inset-0"
+is equivalent to:
+position: absolute;
+top: 0;
+right: 0;
+bottom: 0;
+left: 0;
+- Because of inset-0, the child stretches to fill the entire parent.

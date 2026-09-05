@@ -1,14 +1,15 @@
 import ProductImage from "./ProductImage";
 import { useNavigate } from "react-router";
 
-export default function ProductsGrid({ products }) {
+export default function ProductsGrid({ products, className = "" }) {
   //console.log(products);
   const navigate = useNavigate();
   return (
     <>
       {products?.map((product) => (
         <div
-          className="card flex flex-col items-center rounded-lg shadow-md transition-all duration-300 hover:shadow-xl hover:-translate-y-1 "
+          key={product.id}
+          className={`card flex flex-col items-center rounded-lg shadow-md transition-all duration-300 hover:shadow-xl hover:-translate-y-1  ${className} `}
           onClick={() => {
             navigate(`/product-details/${product.id}`);
           }}

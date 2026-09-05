@@ -17,3 +17,23 @@ note: Fragment element doesn't exist in real DOM (u cann't see it in inspect).
 
 ---> React treats components starting with lowercase letters as HTML elements.
 ---> Components must be PascalCase (uppercase first letter) to be recognized as React components.
+
+************************
+
+--> to configure tailwin
+1. npm install tailwindcss @tailwindcss/vite
+2. In vite.config.js (or vite.config.ts):
+   import tailwindcss from "@tailwindcss/vite";
+then
+   export default defineConfig({
+  plugins: [
+    react(),
+    tailwindcss(),
+  ],
+});
+3. In your src/index.css (or whatever global CSS file you're using):
+
+   @import "tailwindcss";
+4. Make sure your main.jsx imports the CSS:
+
+   import "./index.css";
